@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include <cctype>
 
 //Input validation / cleaning
 int getInt(char const* prompt=NULL, bool failPrompt=true);
@@ -20,6 +21,10 @@ void emptyKBB();
 
 //String manipulation
 std::string split(std::string str, char splitChar);
+
+std::string str_parse_string(const std::string &str, int &i, char c = '"');
+double str_parse_double(const std::string &str, int &i);
+int str_parse_int(const std::string &str, int &i);
 
 //Program flow control
 char displayMenu(const std::string &menuInstructions = "", const std::string &menuChoices = "", const std::string &menuPrompt = "");

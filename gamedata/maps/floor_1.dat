@@ -1,3 +1,5 @@
 floor001
-upstair   2   3   exit
-downstair 17  55  floor_2   0   0
+stair 55 17   floor002   2   7
+door  23  5   key_01
+door  36 13   key_01
+item  10 10   key_01

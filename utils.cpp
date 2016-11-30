@@ -10,6 +10,9 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <stack>
+#include <cctype>
+#include <cmath>
 #include "utils.hpp"
 
 const char INT_FAILPROMPT[] = "Please enter an integer number.";
@@ -146,6 +149,108 @@ std::string split(std::string str, char splitChar)
   }
   outStr += str[i];
   return outStr;
+}
+
+std::string str_parse_string(const std::string &str, int &i, char s_char)
+{
+  bool end = false,
+       reading = false;
+  std::string r_str = "";
+
+  while((i < str.size()) && (!end)){
+    if (str.at(i) == s_char){
+      if (reading) {
+        end = true;
+      } else {
+        reading = true;
+      }
+    } else if (reading) {
+      r_str += str.at(i);
+    }
+    i++;
+  }
+  return r_str;
+}
+
+double str_parse_double(const std::string &str, int &i)
+{
+  char c;
+  std::stack<int> digits;
+
+  double value = 0;
+  bool is_negative = false;
+
+  int place = 0;
+  int decimal_place = -1;
+
+  while((i < str.size()) && 
+        (!isdigit(str.at(i))) && 
+        (str.at(i) != '-'))  { ++i; }
+
+  while((i < str.size()) && (isdigit(c = str.at(i)) || c == '.' || c == '-' )){
+    if ( c == '-' ) {
+      is_negative = true;
+    } else if ( c == '.' ){
+      decimal_place = place;
+    } else {
+      ++place;
+      digits.push(c - '0');  
+    }
+    i++;
+  }
+
+  if (decimal_place != -1) {
+    place = decimal_place - place;
+  } else {
+    place = 0;
+  }
+
+  while(digits.size() > 0){
+    value += pow(10, place++) * digits.top();
+    digits.pop();
+  }
+
+  if (is_negative){
+    value *= -1;
+  }
+
+  return value;  
+}
+
+int str_parse_int(const std::string &str, int &i)
+{
+  char c;
+  std::stack<int> digits;
+
+  bool is_negative = false;
+
+  while((i < str.size()) && 
+        (!isdigit(str.at(i))) && 
+        (str.at(i) != '-'))  { ++i; }
+
+  while((i < str.size()) && (isdigit(c = str.at(i)) || c == '-' )){
+    if ( c == '-' ) {
+      is_negative = true;
+    } else {
+      digits.push(c - '0');  
+    }
+    i++;
+  }
+
+  int place = 0;
+  int value = 0;
+
+  while(digits.size() > 0){
+    value += pow(10, place++) * digits.top();
+    digits.pop();
+  }
+
+  if (is_negative){
+    value *= -1;
+  }
+
+  return value; 
+
 }
 
 

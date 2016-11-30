@@ -32,7 +32,7 @@ class Space{
     /* Constructors, Destructors, Pure Virtuals */
     Space(const Coord &coord);
     Space(int x, int y) : Space(Coord(x,y)) {}
-    virtual ~Space() {}
+    virtual ~Space(); 
     virtual bool passable() = 0;
     virtual bool is_locked() { return false; };
 
@@ -45,7 +45,7 @@ class Space{
     /* Item methods */
     std::vector<Item*> *get_items() { return &items; }
     virtual bool add_item(Item *item) { return false; }
-    virtual Item *remove_item(Item *item) { return NULL; }
+    virtual Item *remove_item(std::string itemID) { return NULL; }
 
     /* render character getters/setters */
     void set_render_char(char c) { this->render_char = c; }
@@ -91,43 +91,46 @@ class Door : public Space {
     virtual char get_render_char() const;
     virtual bool is_locked() { return !(this->keyID == ""); }
     std::string key_str() { return this->keyID; }
+    void set_key(std::string keyID) { this->keyID = keyID; }
     bool open();
     bool close();
 };
 
 class Stair : public Space {
   protected:
-    Space *linked_stair;
-    Floor *linked_floor;
+    Coord linked_coord;
+    std::string linked_floor_ID;
 
   public:
-    Stair(const Coord &coord, char c, Space *linked_stair, Floor *linked_floor) : 
-      Space(coord) { this->render_char = c; this->linked_stair = linked_stair; this->linked_floor = linked_floor;}
-    Stair(int x, int y, char c, Space *linked_stair, Floor *linked_floor) : 
-      Space(x, y) { this->render_char = c; this->linked_stair = linked_stair; this->linked_floor = linked_floor;}
-    void set_linked_stair(Space *linked_stair){ this->linked_stair = linked_stair; }
-    Space *get_linked_stair() { return this->linked_stair; }
-    void set_linked_floor(Floor *linked_floor){ this->linked_floor = linked_floor; }
-    Floor *get_linked_floor() { return this->linked_floor; }
+    Stair(const Coord &coord, char c) : 
+      Space(coord) { this->render_char = c; }
+    Stair(int x, int y, char c) : 
+      Space(x, y) { this->render_char = c; }
+
+    void set_linked_coord(Coord coord) { this->linked_coord = coord; }
+    void set_linked_floor_ID( std::string id ) { this->linked_floor_ID = id; }
+    std::string get_linked_floor_ID () { return this->linked_floor_ID; }
+    Coord get_linked_coord () { return this->linked_coord; }
+
     virtual bool passable() { return true; }
 };
 
 class UpStair : public Stair {
   public:   
-    UpStair(const Coord &coord, Space *linked_stair = NULL, Floor *linked_floor = NULL) : 
-      Stair(coord, UP_STAIR_C, linked_stair, linked_floor) {}
+    UpStair(const Coord &coord) : 
+      Stair(coord, UP_STAIR_C) {}
 
     UpStair(int x, int y, Space *linked_stair = NULL, Floor *linked_floor = NULL) : 
-      Stair(x, y, UP_STAIR_C, linked_stair, linked_floor) {}
+      Stair(x, y, UP_STAIR_C) {}
 };
 
 class DownStair : public Stair {
   public:
-    DownStair(const Coord &coord, Space *linked_stair = NULL, Floor *linked_floor = NULL) : 
-      Stair(coord, DOWN_STAIR_C, linked_stair, linked_floor) {}
+    DownStair(const Coord &coord) : 
+      Stair(coord, DOWN_STAIR_C) {}
 
-    DownStair(int x, int y, Space *linked_stair = NULL, Floor *linked_floor = NULL) : 
-      Stair(x, y, DOWN_STAIR_C, linked_stair, linked_floor) {}
+    DownStair(int x, int y) : 
+      Stair(x, y, DOWN_STAIR_C) {}
 };
 
 #endif

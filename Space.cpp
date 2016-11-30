@@ -16,6 +16,14 @@ Space::Space(const Coord &coord)
   this->linked_spaces.insert(std::pair<direction, Space *>(LEFT, NULL));
 }
 
+Space::~Space()
+{
+  for (auto i = items.begin(); i != items.end(); i++){
+    delete *i;
+    *i = NULL;
+  }
+}
+
 char Space::get_render_char() const
 {
   char c = this->render_char;
@@ -76,14 +84,20 @@ bool OpenSpace::passable()
   return pass;
 }
 
-Item * OpenSpace::remove_item(std::string itemID)
+Item * OpenSpace::remove_item(std::string item_ID)
 {
   Item *item = NULL;
+  std::vector<Item*>::iterator it;
 
   for ( auto i = this->items.begin(); (i != items.end()) && (item == NULL); i++ ){
-    if ((*i)->getID() == itemID){
+    if ((*i)->id() == item_ID){
       item = *i;
+      it = i;
     }
+  }
+
+  if ( item != NULL ){
+    this->items.erase(it);
   }
 
   return item;
@@ -141,3 +155,10 @@ char Door::get_render_char() const
 
   return c;
 }
+
+
+        ////////////////////////////////////////////////////////
+       //                    Stair                           //
+      ////////////////////////////////////////////////////////
+
+

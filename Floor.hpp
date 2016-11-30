@@ -18,6 +18,7 @@ class Floor{
   public:
     ~Floor();
     Space *get_space(int x, int y) { return this->spaces[Coord(x,y)]; }
+    Space *get_space(Coord coord) { return this->spaces[coord]; }
     void add_space(Space *space, int x, int y) 
       { this->spaces.insert(std::pair<Coord, Space *>(Coord(x,y), space)); }
 
