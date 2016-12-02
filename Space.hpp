@@ -14,6 +14,7 @@ const char ITEM_SPACE_C   = '*';
 const char WALL_C         = '#';
 const char UP_STAIR_C     = '^';
 const char DOWN_STAIR_C   = 'v';
+const char HIDDEN_DOOR_C  = '%'; 
 
 enum direction {UP, RIGHT, DOWN, LEFT};
 
@@ -32,7 +33,7 @@ class Space{
     /* Constructors, Destructors, Pure Virtuals */
     Space(const Coord &coord);
     Space(int x, int y) : Space(Coord(x,y)) {}
-    virtual ~Space(); 
+    virtual ~Space() {}; 
     virtual bool passable() = 0;
     virtual bool is_locked() { return false; };
 
@@ -95,6 +96,24 @@ class Door : public Space {
     bool open();
     bool close();
 };
+
+class SecretDoor : public Space {
+  protected:
+    bool is_open;
+        
+  public:
+    SecretDoor(const Coord &coord) : 
+      Space(coord) { this->is_open = false; }
+
+    SecretDoor(int x, int y) : 
+      Space(x, y) { this->is_open = false; }
+
+    virtual bool passable() { return this->is_open; }
+    virtual char get_render_char() const; 
+    bool open(); 
+};
+
+
 
 class Stair : public Space {
   protected:

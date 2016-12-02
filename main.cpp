@@ -1,24 +1,37 @@
 #include <ncurses.h>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
+
 #include "Floor.hpp"
 #include "Character.hpp"
 #include "Game.hpp"
 
-void move_player(Character *character, Floor &floor, direction d);
-
 int main()
 {
+  srand(time(0));
+
   initscr();
   clear();
-  noecho();
-  raw();
-  curs_set(0);
   keypad(stdscr, TRUE);
 
-  int input;
-  Game game;
+  char name[26];
+  
+  printw( "What will your hero be named?\n" );
+  getnstr(name, 25);
 
+  raw();
+  noecho();
+  curs_set(0);
+
+  int input;
+  Game game(name);
+  printw( game.render().c_str() );
+  refresh();
+  
   while ( game.is_in_progress() ) {
-    game.read_input( getch() );
+    input = getch();
+    game.read_input( input );
     clear();
     printw( game.render().c_str() );
     refresh();

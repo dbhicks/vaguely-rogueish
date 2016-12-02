@@ -7,35 +7,60 @@
 #include <fstream>
 #include <sstream>
 
+/* Gamedata paths */
 const std::string MAP_PATH_ROOT   = "gamedata/maps/";
-const std::string ITEM_TBL_PATH   = "gamedata/items/items.tbl"; 
+const std::string ITEM_TBL_PATH   = "gamedata/items/items.tbl";
+const std::string WPN_TBL_PATH    = "gamedata/items/weapons.tbl";
+const std::string AMR_TBL_PATH    = "gamedata/items/armor.tbl";
+const std::string LOGFILE_PATH    = "gamedata/log";
+const std::string MOB_TBL         = "gamedata/mobs/mobs.tbl";
+const std::string MOB_LOOT_DIR    = "gamedata/mobs/loot/";
+
+/* starting player information */
 const std::string STARTING_MAP = "floor001";
-const Coord STARTING_COORD = Coord(3,3);
+const std::string STARTING_WPN = "l_sword";
+const std::string STARTING_AMR = "starter_scale_mail";
 
 class Game{
   private:
-    std::vector<std::string> messages;    /* container of messages to print per round */
-    std::map<std::string, Floor*> floors; /* game floors */
-    std::map<std::string, Item*> items;   /* game item data */
-    Player player;                        /* the player character */
-    bool in_progress;                     /* whether the game is in progress */
-    Floor *current_floor;                 /* pointer to the current floor */
+    std::vector<std::string> messages;      /* container of messages to print per round */
+    std::map<std::string, Floor*> floors;   /* game floors */
+    std::map<std::string, Item*> items;     /* game item data */
+    std::map<std::string, mob_data*> mobs;  /* map of mobID to data */
+
+    Player player;                          /* the player character */
+    bool in_progress;                       /* whether the game is in progress */
+    Floor *current_floor;                   /* pointer to the current floor */
+    std::ofstream logfile;                  /* logfile */
     
   public:
-    Game();
+    Game(std::string hero_name);
     ~Game();
 
     void load_floors();
     void load_items();
+    void load_mobs();
     void read_input(int input);
+
     void move_player(const direction &dir);
+
+    void manage_player_inventory();
+    Item* get_player_inventory_selection(const char *prompt);
+    void print_player_inventory();
     void player_get_items();
+    void player_drop_item();
+    void player_examine_item();
+    void player_equip_item();
+    void player_attack_mob(Character *mob);    
+    
+
     void move_mobs();
+    
     std::string render();
+    std::string print_status_bar();
+
     Coord coord_from_direction(const Coord &coord, const direction &dir);
     bool is_in_progress() { return this->in_progress; }
-
-
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Die.hpp"
 
-Die::Die(int n_sides, int n_dice, int mod)
+Die::Die(int n_dice, int n_sides, int mod)
 {
   this->n_sides = n_sides;
   this->n_dice = n_dice;

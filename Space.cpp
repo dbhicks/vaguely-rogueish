@@ -16,13 +16,6 @@ Space::Space(const Coord &coord)
   this->linked_spaces.insert(std::pair<direction, Space *>(LEFT, NULL));
 }
 
-Space::~Space()
-{
-  for (auto i = items.begin(); i != items.end(); i++){
-    delete *i;
-    *i = NULL;
-  }
-}
 
 char Space::get_render_char() const
 {
@@ -158,7 +151,27 @@ char Door::get_render_char() const
 
 
         ////////////////////////////////////////////////////////
-       //                    Stair                           //
+       //                    Secret Door                     //
       ////////////////////////////////////////////////////////
 
+bool SecretDoor::open()
+{
+  bool was_open = this->is_open;
+  this->is_open = true;
+  return (this->is_open != was_open);
+}
 
+char SecretDoor::get_render_char() const
+{
+  char c;
+
+  if ( this->present_character != NULL ) {
+    c = this->present_character->get_render_char();
+  } else if ( this->is_open ){
+    c = EMPTY_SPACE_C;
+  } else {
+    c = WALL_C;
+  }
+
+  return c;
+}

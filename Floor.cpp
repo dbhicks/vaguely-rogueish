@@ -42,6 +42,10 @@ Space *Floor::interpret_space(char space_char, Coord coord)
     case DOWN_STAIR_C:
       space = new DownStair(coord);
       break;
+    
+    case HIDDEN_DOOR_C:
+      space = new SecretDoor(coord);
+      break;
   }
 
   return space;
