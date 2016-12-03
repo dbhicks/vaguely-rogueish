@@ -1007,30 +1007,39 @@ void Game::load_floors()
   }    
 }
 
+
 /*************************************************************************
- * Function:
- * Description:
- * Parameters:
- * Pre-conditions:
- * Post-conditions:
- * Returns:
+ * Function: load items
+ * Description: loads item data from a table into a map, using item ID as
+ *              a key. 
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: item data is loaded into Game::items
+ * Returns: none
  ************************************************************************/
 void Game::load_items()
 {
-  std::ifstream item_table(ITEM_TBL_PATH.c_str());
-
-  std::string item_ID,
-              item_name,
-              item_desc,
-              line;
-
-  std::stringstream line_ss;
-
-  double item_weight,
+  std::ifstream item_table(ITEM_TBL_PATH.c_str());  /* input file stream for item data */
+  std::string item_ID,          /* a string to hold the item ID  */
+              item_name,        /* a string to hold the item name */
+              item_desc,        /* a string to hold the item description */
+              line;             /* a string to hold line by line input */
+  std::stringstream line_ss;    /* stringstream to stream line by line   */ 
+  double item_weight,           /* doubles to hold item weight and value */
          item_value;
 
-  int i;
+  int i;  /* an integer to use as an index value for custom parser location */
 
+
+  /*
+   *  Loop through all lines in the item table,
+   *    load each item's information, 
+   *      log the item, 
+   *        and insert the item into the Game::items map
+   *    Repeat for weapon class and armor class items
+   */
+
+  /* generic items */
   while( std::getline(item_table, line) ){
     i = 0;
 
@@ -1041,7 +1050,8 @@ void Game::load_items()
     item_value = str_parse_double(line, i);     
 
     this->logfile << "\tLoading generic item, " << item_ID << '\n';
-    this->items.insert(std::pair<std::string, Item*>(item_ID, new Item(item_ID, item_name, item_desc, item_weight, item_value)));  
+    this->items.insert(std::pair<std::string, Item*>
+      (item_ID, new Item(item_ID, item_name, item_desc, item_weight, item_value)));  
   }
 
   item_table.close();
@@ -1051,6 +1061,8 @@ void Game::load_items()
       damage_die_mod;
 
   item_table.open(WPN_TBL_PATH.c_str());
+
+  /* weapon class items */
   while( std::getline(item_table, line) ) {
     i = 0;
     item_ID = str_parse_string(line, i);
@@ -1063,14 +1075,24 @@ void Game::load_items()
     damage_die_sides = int(str_parse_double(line, i));
     damage_die_mod = int(str_parse_double(line, i));
     this->logfile << "\tLoading weapon, " << item_ID << '\n';
-    this->items.insert(std::pair<std::string, Item*>(item_ID, new Weapon(item_ID, item_name, item_desc, item_weight, item_value, damage_die_n, damage_die_sides, damage_die_mod)));  
+    this->items.insert(std::pair<std::string, Item*>(item_ID, 
+    new Weapon( item_ID, 
+                item_name, 
+                item_desc, 
+                item_weight, 
+                item_value, 
+                damage_die_n, 
+                damage_die_sides, 
+                damage_die_mod)));  
   }
+
   item_table.close();
   
   item_table.open(AMR_TBL_PATH);
 
   int ac;
-
+  
+  /* armor class items */
   while( std::getline(item_table, line) ) {
     i = 0;
     item_ID = str_parse_string(line, i);
@@ -1078,21 +1100,24 @@ void Game::load_items()
     item_desc = str_parse_string(line, i);
     item_weight = str_parse_double(line, i);
     item_value = str_parse_double(line, i);  
-    
     ac = int(str_parse_double(line, i));
     this->logfile << "\tLoading armor, " << item_ID << '\n';
-    this->items.insert(std::pair<std::string, Item*>(item_ID, new Armor(item_ID, item_name, item_desc, item_weight, item_value, ac)));  
+    this->items.insert(std::pair<std::string, Item*>
+    (item_ID, new Armor(item_ID, item_name, item_desc, item_weight, item_value, ac)));  
   }
   item_table.close();  
 }
 
+
 /*************************************************************************
- * Function:
- * Description:
- * Parameters:
- * Pre-conditions:
- * Post-conditions:
- * Returns:
+ * Function: load mobs
+ * Description: load the monster information into a map of structs holding
+ *              the initialization information for monsters of a particular
+ *              type, keyed by a unique string ID.
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the monster data is loaded into a map
+ * Returns: none
  ************************************************************************/
 void Game::load_mobs()
 {
@@ -1100,10 +1125,8 @@ void Game::load_mobs()
   std::ifstream mob_loot_table;
   std::string line;
   int i;
-
   std::string loot_id;
   int loot_chance;
-
   mob_data *data;
 
   while(std::getline(mob_table, line)) {
