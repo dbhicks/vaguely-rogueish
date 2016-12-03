@@ -4,6 +4,7 @@ CXXFLAGS = -g
 CXXFLAGS += -Wall
 CXXFLAGS += -Wpedantic
 CXXFLAGS += -c
+CXXFLAGS += -std=c++11
 LFLAGS = -lncurses
 
 C_SRC = main.cpp 
