@@ -2,6 +2,7 @@
 #define FLOOR_HPP
 
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -14,6 +15,7 @@ class Character;
 class Floor{
   private:
     std::map<Coord, Space *> spaces;
+    std::set<Character *> mob_list;
     
   public:
     ~Floor();
@@ -28,6 +30,9 @@ class Floor{
 
     bool add_char(Character *, const Coord &coord);
     bool move_char(const Coord &from, const Coord &to);
+    void list_mob(Character *mob) { this->mob_list.insert(mob); } 
+    void unlist_mob(Character *mob) { this->mob_list.erase(this->mob_list.find(mob)); }
+    std::set<Character *> *get_mob_list() { return &(this->mob_list); }
 };
 
 #endif

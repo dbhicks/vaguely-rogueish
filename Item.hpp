@@ -63,6 +63,7 @@ class Armor : public Item {
            int AC) : 
       Item(item_ID, item_name, item_description, item_weight, item_value)
       { this->AC = AC; }
+      int get_ac() { return this->AC; }
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "Character.hpp"
 #include <fstream>
 #include <sstream>
+#include <set>
 
 /* Gamedata paths */
 const std::string MAP_PATH_ROOT   = "gamedata/maps/";
@@ -21,6 +22,9 @@ const std::string STARTING_MAP = "floor001";
 const std::string STARTING_WPN = "l_sword";
 const std::string STARTING_AMR = "starter_scale_mail";
 
+/* gameplay constants */
+const int MAX_DAYS = 20;
+
 class Game{
   private:
     std::vector<std::string> messages;      /* container of messages to print per round */
@@ -32,6 +36,8 @@ class Game{
     bool in_progress;                       /* whether the game is in progress */
     Floor *current_floor;                   /* pointer to the current floor */
     std::ofstream logfile;                  /* logfile */
+
+    int days_passed;
     
   public:
     Game(std::string hero_name);
@@ -51,16 +57,21 @@ class Game{
     void player_drop_item();
     void player_examine_item();
     void player_equip_item();
-    void player_attack_mob(Character *mob);    
-    
+    void player_attack_mob(Character *mob);
+    void player_rest();
+    void inc_day() { this->days_passed++; }
+    void print_player_character_sheet();
 
     void move_mobs();
+    bool mob_make_moves(Character *mob, const std::vector<direction> &moves);
+    bool mob_attack_player(Character *mob);
     
     std::string render();
     std::string print_status_bar();
 
     Coord coord_from_direction(const Coord &coord, const direction &dir);
     bool is_in_progress() { return this->in_progress; }
+
 };
 
 #endif

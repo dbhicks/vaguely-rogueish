@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <typeinfo>
 #include <iomanip>
+#include <set>
 #include "Game.hpp"
 #include "utils.hpp"
 
@@ -33,6 +34,7 @@ Game::Game(std::string hero_name)
   this->current_floor->add_char(&player, STARTING_COORD);
 
   this->in_progress = true;
+  this->days_passed = 0;
 
   this->logfile << "Game ready!\n";
   this->logfile.close();
@@ -44,12 +46,10 @@ Game::~Game()
     delete i->second;
     i->second = NULL;
   }
-
   for( auto i = items.begin(); i != items.end(); i++ ) {
     delete i->second;
     i->second = NULL;
   }
-
   for ( auto i = mobs.begin(); i != mobs.end(); i++ ) {
     delete i->second;
     i->second = NULL;
@@ -89,6 +89,14 @@ void Game::read_input(int input)
       manage_player_inventory();
       break;
 
+    case 'r':
+      player_rest();
+      break;
+
+    case 'c':
+      print_player_character_sheet();
+      break;
+
     case 'Q':
       this->in_progress = false;
       break;
@@ -111,6 +119,25 @@ Coord Game::coord_from_direction(const Coord &coord, const direction &dir)
   }
   
   return Coord( (coord.x()+dx), (coord.y()+dy) );
+}
+
+void Game::player_rest()
+{
+  std::stringstream ss;
+  if (this->current_floor->get_mob_list()->size() == 0) {
+    this->inc_day();
+    ss << "You rest and recover health.\n"
+       << "You've now been in the dungeon for " << this->days_passed 
+       << " days.\n";
+    this->player.rest();
+    if (this->days_passed > MAX_DAYS) {
+      ss << "You've taken too long to clear the dungeon.\n";
+    }    
+  } else {
+    ss << "You cannot rest while there are monsters nearby.\n";
+  }
+
+  this->messages.push_back(ss.str());
 }
 
 void Game::player_get_items()
@@ -143,6 +170,25 @@ void Game::player_get_items()
   } else {
     this->messages.push_back("There are no items to get\n");
   }
+}
+
+void Game::print_player_character_sheet()
+{
+  clear();
+  printw("Character Name: %s\n", player.get_name().c_str());
+  printw("Level: %i\n", player.get_level());
+  printw("Experience: %i\n", player.get_experience());
+  printw("Base Attack: %i\n", player.get_b_atk()); 
+  printw("Stats:\n");
+  printw("  STR: %i (%i)", player.get_ability(STR), player.get_ability_mod(STR));
+  printw("  DEX: %i (%i)\n", player.get_ability(DEX), player.get_ability_mod(DEX));
+  printw("  CON: %i (%i)", player.get_ability(CON), player.get_ability_mod(CON));
+  printw("  INT: %i (%i)\n", player.get_ability(INT), player.get_ability_mod(INT));
+  printw("  WIS: %i (%i)", player.get_ability(WIS), player.get_ability_mod(WIS));
+  printw("  CHA: %i (%i)\n", player.get_ability(CHA), player.get_ability_mod(CHA));
+
+  printw("\n\nPress any key to continue\n");
+  getch();
 }
 
 void Game::manage_player_inventory()
@@ -317,7 +363,7 @@ void Game::move_player(const direction &dir)
 
     if(to_space->passable()){
       if( this->current_floor->move_char(from, to) ){
-        player.set_coord(to.x(), to.y());
+        //player.set_coord(to.x(), to.y());
       } 
     } else {
       if ( typeid(*to_space) == typeid(Wall)){
@@ -372,12 +418,11 @@ void Game::move_player(const direction &dir)
       this->current_floor->get_space(player.get_coord())->add_character(&player);
     }
   }
+  move_mobs();
 }
 
 void Game::player_attack_mob(Character *mob)
 {
-//  this->logfile << "Called attack...\n";
-
   std::stringstream attack_string;
   attack_string << "You attack " << mob->get_name();
 
@@ -413,6 +458,7 @@ void Game::player_attack_mob(Character *mob)
     player.add_experience(dynamic_cast<Mob*>(mob)->get_experience());
 
     if (space->delete_character()){
+      this->current_floor->unlist_mob(mob);
       delete mob;
     }
   }
@@ -449,7 +495,98 @@ std::string Game::print_status_bar()
 
 void Game::move_mobs()
 {
+  std::set<Character *> *mob_list = this->current_floor->get_mob_list();
+  std::vector<direction> primary_moves;
+  std::vector<direction> secondary_moves;
   
+  Coord player_coord = player.get_coord();
+  Coord mob_coord;
+
+  for (auto i = mob_list->begin(); i != mob_list->end(); i++){
+    mob_coord = (*i)->get_coord();
+    
+    if ( player_coord.x() < mob_coord.x() ) {
+      primary_moves.push_back(LEFT);
+      secondary_moves.push_back(RIGHT);
+    } else if ( player_coord.x() > mob_coord.x() ) {
+      primary_moves.push_back(RIGHT);
+      secondary_moves.push_back(LEFT);
+    } else {
+      secondary_moves.push_back(LEFT);
+      secondary_moves.push_back(RIGHT);
+    }
+
+    if ( player_coord.y() < mob_coord.y() ) {
+      primary_moves.push_back(UP);
+      secondary_moves.push_back(DOWN);
+    } else if ( player_coord.y() > mob_coord.y() ) {
+      primary_moves.push_back(DOWN);
+      secondary_moves.push_back(UP);
+    } else {
+      secondary_moves.push_back(UP);
+      secondary_moves.push_back(DOWN);
+    }
+
+    if ( !mob_make_moves(*i, primary_moves) ) {
+      mob_make_moves(*i, secondary_moves);
+    }
+
+    while( primary_moves.size() > 0 ) {
+      primary_moves.pop_back();
+    }
+    while( secondary_moves.size() > 0) {
+      secondary_moves.pop_back();
+    }
+  }
+}
+
+bool Game::mob_make_moves(Character *mob, const std::vector<direction> &moves)
+{
+  bool moved = false;
+  Coord space;
+  if (moves.size() != 0){
+    int i = rand() % moves.size(),
+        j = 0;
+    
+    while ( j < moves.size() && !moved ) {
+      space = coord_from_direction(mob->get_coord(), moves.at((i+j) % moves.size()));
+      if (player.get_coord() == space){
+        mob_attack_player(mob);
+        moved = true;
+      } else if ( this->current_floor->move_char(mob->get_coord(), space)) { 
+        moved = true;
+      }
+      j++;
+    }
+  } 
+  return moved;
+}
+
+bool Game::mob_attack_player(Character *mob)
+{
+  bool hit = false;
+  if (!player.is_dead()){
+    std::stringstream ss;
+    ss << mob->get_name() << " attacks you ";
+
+    attack_data atk = mob->attack();
+    if ( player.defend(atk) )  {
+      ss << "and hits for " << atk.damage_roll << " damage.\n";
+      hit = true;
+    } else {
+      ss << "but it misses.\n";
+    }
+
+    this->messages.push_back(ss.str());
+    
+    if ( player.is_dead() ) {
+      player.set_hp(0);
+      this->messages.push_back("You have died!\n");
+      this->in_progress = false;
+    }
+  }
+
+  return hit;
 }
 
 void Game::load_floors()
@@ -486,7 +623,7 @@ void Game::load_floors()
     
     std::getline(map_data_file, line);
 
-    this->logfile << "\tLoading " << map_id << '\n';
+    this->logfile << "\tLoading \"" << map_id << "\"\n";
     while(std::getline(map_data_file, line)){
       line_ss.clear();
       line_ss.str(line);
@@ -526,6 +663,7 @@ void Game::load_floors()
           }
         }
 
+        new_floor->list_mob(mob);
         space->add_character(mob);
       }
     }

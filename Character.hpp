@@ -59,6 +59,8 @@ class Character {
     void set_name(std::string name) { this->name = name; }
     std::string get_name() { return this-> name; }
     int get_hp() { return this->hp; }
+    void set_hp( int hp ) { this->hp = hp; }
+    void rest() { this->hp = this->max_hp; }
     int get_max_hp() { return this->max_hp; };
     bool is_dead() { return this->hp <= 0; }
 
@@ -90,6 +92,10 @@ class Player : public Character {
     Item *get_weapon() { return this->equipped_weapon; }
     Item *get_armor() { return this->equipped_armor; }
     bool add_experience(int exp);
+
+    int get_experience() { return this->experience; } 
+    int get_level() { return this->level; }
+    int get_b_atk() { return this->b_atk; }
     
     virtual attack_data attack();
     virtual bool defend(attack_data);

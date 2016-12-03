@@ -1,0 +1,15 @@
+floor004
+stair   33     8    floor002    56  7
+stair   59    17    floor005    6   3
+stair    8     2    floor006    64  18 
+door    33    10    key_02  
+mob      5     2    orc01
+mob     11     2    orc01
+mob      8     4    orc01
+mob     8     14    orc01
+mob     56    17    orc01
+mob     63    17    orc01
+mob     59    15    orc01
+mob     58    5     orc01
+mob     32    3     gob01
+mob     33    14    gob01

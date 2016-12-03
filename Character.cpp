@@ -49,6 +49,7 @@ Player::Player(std::string name) : Character(name, PC_RENDER_C, STARTING_COORD)
   this->ability_score[CHA] = 18;
   this->max_hp = this->hp = 10;
   this->level = 1;
+  this->b_atk = 1;
   this->experience = 0;
 }
 
@@ -75,15 +76,25 @@ attack_data Player::attack()
 {
   attack_data atk;
 
-  atk.attack_roll = rand() % 20 + 1;
-  atk.damage_roll = dynamic_cast<Weapon*>(this->equipped_weapon)->roll_damage();
+  atk.attack_roll = (rand() % 20 + 1) + this->b_atk + this->get_ability_mod(STR);
+  atk.damage_roll = dynamic_cast<Weapon*>(this->equipped_weapon)->roll_damage() + 
+                    this->get_ability_mod(STR);
 
   return atk;
 }
 
 bool Player::defend(attack_data atk)
 {
-  return false;
+  bool hit = false;
+
+  int defense = 10 + dynamic_cast<Armor*>(this->equipped_armor)->get_ac() 
+                + this->get_ability_mod(DEX);
+  if (defense <= atk.attack_roll) {
+    this->hp -= atk.damage_roll;
+    hit = true;
+  }
+
+  return hit;
 }
 
 void Player::equip_item(Item *item)
@@ -126,6 +137,8 @@ Mob::Mob(mob_data *data, Coord coord) :
 attack_data Mob::attack()
 {
   attack_data atk;
+  atk.damage_roll = this->damage_die->roll();
+  atk.attack_roll = this->b_atk + (rand() % 20 + 1);
   return atk;
 }
 
@@ -145,5 +158,3 @@ Mob::~Mob()
 {
   delete this->damage_die;
 }
-
-

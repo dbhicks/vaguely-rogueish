@@ -2,10 +2,10 @@ floor001
 stair 55 17   floor002   2   7
 door  23  5   key_01
 door  36 13   key_01
-item  10 10   key_01
-mob   25  9   gob01
-mob   30  9   gob01
-mob    6  6   gob01
-mob    6  7   gob01
-mob    7  6   gob01  
-mob    7  7   gob01
+mob   25  9   skel02
+mob   30  9   skel02
+mob    6  6   skel01
+mob    9  16  skel01
+mob    51 15  skel01 
+mob    51 2   skel01
+item   30 9   key_02 

@@ -1,0 +1,22 @@
+floor002
+stair   2     7   floor001  55  17
+stair   55    17  floor003  8   3
+stair   56    7   floor004  33  8
+mob     7     2   gob01
+mob     10    3   gob01
+mob     21    3   gob01
+mob     25    3   gob01
+mob     32    2   gob01
+mob     40    3   gob01
+mob     47    2   gob01
+mob     57    4   gob01
+mob     3     12  gob01
+mob     12    12  gob01
+mob     32    11  gob01
+mob     42    13  gob01
+mob     48    11  gob01
+mob     56    12  gob01
+mob     11    8   skel01
+mob     35    8   skel01
+mob     55    8   skel01
+item    23    3   key_01

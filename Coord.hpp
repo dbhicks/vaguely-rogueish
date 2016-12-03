@@ -10,6 +10,7 @@ class Coord{
     Coord() {}
     Coord(int x, int y) { this->x_coord = x, this->y_coord = y; }
     bool operator<(const Coord &right) const;
+    bool operator==(const Coord &right) const { return this->x_coord == right.x() && this->y_coord == right.y(); }
 
     void set(int x, int y) { this->x_coord = x; this->y_coord = y; }
     void set_x(int x) { this->x_coord = x; }

@@ -1,0 +1,7 @@
+"gob01"   "a goblin"               "g"  15   4    1   8   -1    1   0.25
+"gob02"   "a well dressed goblin"  "G"  20   4    2   8   -1    1   1.00
+"orc01"   "an orc"                 "o"  14   4    1  12    3    3   0.50
+"skel01"  "a small skeleton"       "s"  13   3    1   3   -1    0   0.25
+"skel02"  "a large skeleton"       "S"  13  13    1   6    2    2   1.00
+"bbr01"   "a bugbear"              "b"  17  16    1   8    2    4   2.00
+"mino01"  "a minotaur"             "M"  14  39    2   8    4    9   4.00

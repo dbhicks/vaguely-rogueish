@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <sstream>
 
@@ -35,10 +36,8 @@ int main()
     clear();
     printw( game.render().c_str() );
     refresh();
-  }
-  
-  clear();
-  printw("Press any key to continue...");
+  } 
+  printw("Press any key to exit...");  
   refresh();
   getch(); 
   endwin();

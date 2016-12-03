@@ -76,6 +76,9 @@ Floor::~Floor()
   for(auto i = this->spaces.begin(); i != this->spaces.end(); i++){
     delete (i->second);
   }
+  for(auto i = this->mob_list.begin(); i != this->mob_list.end(); i++){
+    delete (*i);
+  }
 }
 
 bool Floor::add_char(Character *character, const Coord &coord)
@@ -93,6 +96,7 @@ bool Floor::move_char(const Coord &from, const Coord &to)
     if (character != NULL &&
         this->spaces[to]->add_character(character) &&
         this->spaces[from]->delete_character()) {
+      character->set_coord(to);
       moved = true;
     }
   }
