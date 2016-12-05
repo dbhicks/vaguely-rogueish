@@ -1,8 +1,21 @@
+/*************************************************************************
+ * Program Filename: Item.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for an item class and its sub-
+ *              classes, Weapon and Armor
+ * Input: none
+ * Output: none
+ ************************************************************************/
 #ifndef ITEM_HPP
 #define ITEM_HPP
 
 #include <string>
 #include "Die.hpp"
+
+        //////////////////////////////////////////////////////////
+       //                    Item                              //
+      //////////////////////////////////////////////////////////
 
 class Item {
   private:
@@ -30,6 +43,11 @@ class Item {
     virtual void ignore_me() {} 
 };
 
+
+        //////////////////////////////////////////////////////////
+       //                    Weapon                            //
+      //////////////////////////////////////////////////////////
+
 class Weapon : public Item {
   private:
     Die *damage_die;
@@ -49,6 +67,10 @@ class Weapon : public Item {
     int roll_damage() { return this->damage_die->roll(); }
 
 };
+
+        //////////////////////////////////////////////////////////
+       //                    Armor                             //
+      //////////////////////////////////////////////////////////
 
 class Armor : public Item {
   private:

@@ -1,5 +1,27 @@
+/*************************************************************************
+ * Program Filename: Item.cpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class definition file for an item class
+ * Input:  none
+ * Output: none
+ ************************************************************************/
+
 #include "Item.hpp"
 
+/************************************************************************
+ * Function: Item
+ * Description: constructor
+ * Parameters: item_id - the item id (key value)
+ *             item_name - the name of the item, human readable
+ *             item_description - a brief description of the item
+ *             item_weight - weight of the item (lbs)
+ *             item_value - value of the item
+ *
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: none
+ ***********************************************************************/
 Item::Item(std::string item_ID,
            std::string item_name,
            std::string item_description,

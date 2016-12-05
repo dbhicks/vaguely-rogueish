@@ -1,3 +1,13 @@
+/*************************************************************************
+ * Program Filenamee: Space.cpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class definition file for a Space class and its subclasses
+ *              EmptySpace, Door, Wall, SecretDoor
+ * Input:
+ * Output:
+ ************************************************************************/
+
 #include "Space.hpp"
 #include "Coord.hpp"
 #include "Character.hpp"
@@ -5,7 +15,17 @@
         ////////////////////////////////////////////////////////
        //                    Space                           //
       ////////////////////////////////////////////////////////
-        
+
+/*************************************************************************
+ * Function: Space 
+ * Description: constructor; initializes the linked spaces and present
+ *              character to null
+ *
+ * Parameters: coord
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: none
+ ************************************************************************/
 Space::Space(const Coord &coord)
 {
   this->coord = coord;
@@ -17,6 +37,14 @@ Space::Space(const Coord &coord)
 }
 
 
+/*************************************************************************
+ * Function: get_render_char
+ * Description: returns the character to be rendered for this space
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions:  none
+ * Returns: char - character to be rendered.
+ ************************************************************************/
 char Space::get_render_char() const
 {
   char c = this->render_char;
@@ -28,6 +56,15 @@ char Space::get_render_char() const
   return c;
 }
 
+
+/*************************************************************************
+ * Function: add_character
+ * Description: adds a character to the space
+ * Parameters: character - the character to add
+ * Pre-conditions: none
+ * Post-conditions: The character will have been added to the space
+ * Returns: bool - true if the character was added
+ ************************************************************************/
 bool Space::add_character(Character *character)
 {
   bool added_character = false;
@@ -40,6 +77,15 @@ bool Space::add_character(Character *character)
   return added_character;
 }
 
+
+/*************************************************************************
+ * Function: delete_character
+ * Description: removes a character from the space
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the character will have been removed from the space
+ * Returns: bool - true if the character was removed
+ ************************************************************************/
 bool Space::delete_character()
 {
   bool deleted = false;
@@ -52,6 +98,15 @@ bool Space::delete_character()
   return deleted;
 }
 
+
+/*************************************************************************
+ * Function: remove_character
+ * Description: removes a character from the space
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the character will have been removed
+ * Returns: Character * - the character removed
+ ************************************************************************/
 Character * Space::remove_character()
 {
   Character *character = this->present_character;
@@ -64,6 +119,14 @@ Character * Space::remove_character()
        //                   OpenSpace                        //
       ////////////////////////////////////////////////////////
 
+/*************************************************************************
+ * Function: passable
+ * Description: returns whether the space is passable
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: bool - true if the space is passable
+ ************************************************************************/
 bool OpenSpace::passable()
 {
   bool pass = true;
@@ -77,6 +140,14 @@ bool OpenSpace::passable()
   return pass;
 }
 
+/*************************************************************************
+ * Function: remove_item
+ * Description: removes an item
+ * Parameters: item_ID - the item ID of the item to remove
+ * Pre-conditions: none
+ * Post-conditions: the item, if it was found, is removed.
+ * Returns: Item* - the item removed
+ ************************************************************************/
 Item * OpenSpace::remove_item(std::string item_ID)
 {
   Item *item = NULL;
@@ -96,6 +167,14 @@ Item * OpenSpace::remove_item(std::string item_ID)
   return item;
 }
 
+/*************************************************************************
+ * Function: get_render_char
+ * Description: gets the render character of the space
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: char - the character to render for the space
+ ************************************************************************/
 char OpenSpace::get_render_char() const
 {
   char c = this->render_char;
@@ -114,6 +193,14 @@ char OpenSpace::get_render_char() const
        //                    Door                            //
       ////////////////////////////////////////////////////////
 
+/*************************************************************************
+ * Function: open
+ * Description: opens the door 
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the door will have been opened
+ * Returns: bool - the door was opened (and was not already open)
+ ************************************************************************/
 bool Door::open()
 {
   bool was_open = this->is_open;
@@ -121,6 +208,15 @@ bool Door::open()
   return (was_open != this->is_open);
 }
 
+
+/*************************************************************************
+ * Function: close
+ * Description: closes the door
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the door may have been closed
+ * Returns: bool - the door was closed (and was not already closed)
+ ************************************************************************/
 bool Door::close()
 {
   bool was_open = this->is_open;
@@ -132,6 +228,15 @@ bool Door::close()
   return (was_open != this->is_open);
 }
 
+
+/*************************************************************************
+ * Function: get_render_char
+ * Description: returns the character to render for the door space
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: char - the character to render
+ ************************************************************************/
 char Door::get_render_char() const
 {
   char c;
@@ -154,6 +259,14 @@ char Door::get_render_char() const
        //                    Secret Door                     //
       ////////////////////////////////////////////////////////
 
+/*************************************************************************
+ * Function: open
+ * Description: opens the secret door
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: bool - true if the door was opened (and was not already open)
+ ************************************************************************/
 bool SecretDoor::open()
 {
   bool was_open = this->is_open;
@@ -161,6 +274,14 @@ bool SecretDoor::open()
   return (this->is_open != was_open);
 }
 
+/*************************************************************************
+ * Function: get_render_char
+ * Description: returns the character to render for the secret door
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: char - the character to render
+ ************************************************************************/
 char SecretDoor::get_render_char() const
 {
   char c;

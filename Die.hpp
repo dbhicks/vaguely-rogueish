@@ -1,10 +1,17 @@
+/*************************************************************************
+ * Program Filename:
+ * Author: David Bacher-Hicks
+ * Date:  3 December 2016
+ * Description: A class declaration file for a Die class
+ * Input: none
+ * Output: none
+ ************************************************************************/
+
 #ifndef DIE_HPP
 #define DIE_HPP
 
 #include <stack>
 #include <cstdlib>
-
-class ERR_INVALID_DIESTRING {};
 
 class Die{
   private:

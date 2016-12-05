@@ -43,7 +43,11 @@ Game::Game(std::string hero_name)
   this->logfile << "Loading floors...\n";
   load_floors();
   this->logfile << "Finished loading floors.\n\n";  
-  
+ 
+  this->logfile << "Linking spaces...\n";
+  this->link_spaces();
+  this->logfile << "Finished linking floors.\n\n";
+
   /* 
    * Set initial game conditions 
    *  Set the player to the global constant starting map and location,
@@ -175,6 +179,34 @@ Coord Game::coord_from_direction(const Coord &coord, const direction &dir)
   }
   
   return Coord( (coord.x()+dx), (coord.y()+dy) );
+}
+
+/*************************************************************************
+ * Function:    link_spaces
+ * Description: provides each space with a pointer to adjacent spaces  
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: spaces 
+ * Returns: none
+ ************************************************************************/
+void Game::link_spaces()
+{
+  std::map<Coord, Space*> *spaces;
+  direction dir;
+  Coord check_coord;
+
+  for (auto i = this->floors.begin(); i != this->floors.end(); i++){
+    spaces = i->second->get_spaces();
+    for (auto j = spaces->begin(); j != spaces->end(); j++){
+      for (int k = 0; k < 4; k++){
+        dir = static_cast<direction>(k);
+        check_coord = coord_from_direction( j->first, dir );
+        if ( spaces->find( check_coord ) != spaces->end() ){
+          j->second->link( (*spaces)[check_coord], dir );
+        }
+      }
+    }
+  }
 }
 
 
@@ -554,9 +586,13 @@ void Game::move_player(const direction &dir)
   /* otherwise, if there are no characters present */
   } else {
 
-    /* if passable, move the player there */
+    /* if passable, move the player there, unless the player is encumbered */
     if(to_space->passable()){
-      this->current_floor->move_char(from, to);
+      if ( player.encumbered() ){
+        this->messages.push_back("You are too encumbered to move.\n");
+      } else {
+        this->current_floor->move_char(from, to);
+      }
     
     /* if not passable, check for other actions */
     } else {
@@ -839,7 +875,7 @@ bool Game::mob_make_moves(Character *mob, const std::vector<direction> &moves)
       if (player.get_coord() == space){
         mob_attack_player(mob);
         moved = true;
-      } else if ( this->current_floor->move_char(mob->get_coord(), space)) { 
+      } else if ( this->current_floor->move_char(mob->get_coord(), space )) { 
         moved = true;
       }
       j++;

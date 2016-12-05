@@ -1,6 +1,24 @@
+/*************************************************************************
+ * Program Filename: Floor.cpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class definition file for a Floor class. Encapsulates
+ *              Space objects.
+ * Input:  none
+ * Output: none
+ ************************************************************************/
+
 #include "Floor.hpp"
 #include "Character.hpp"
 
+/*************************************************************************
+ * Function: load_floor
+ * Description: loads a floor layout from a floor layout file
+ * Parameters: path - the path of the layout file
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: none
+ ************************************************************************/
 void Floor::load_floor(std::string path)
 {
   std::ifstream in_file(path.c_str());
@@ -18,6 +36,18 @@ void Floor::load_floor(std::string path)
   in_file.close();
 }
 
+
+/*************************************************************************
+ * Function: interpret_space 
+ * Description: interprets a character and creates a new space with that
+ *              coordinate information and type.
+ *
+ * Parameters: space_char - the character to interpret
+ *              coord - the coordinate of the space
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: Space *space - a pointer to the created space
+ ************************************************************************/
 Space *Floor::interpret_space(char space_char, Coord coord)
 {
   Space *space = NULL;
@@ -51,13 +81,25 @@ Space *Floor::interpret_space(char space_char, Coord coord)
   return space;
 }
 
+
+/*************************************************************************
+ * Function: render_floor
+ * Description: renders the floor to a string
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: none
+ * Returns: std::string - the rendered floor
+ ************************************************************************/
 std::string Floor::render_floor()
 {
   std::string render_string = "";
-
   int last_y = 0,
       y = 0;
 
+  /*
+   *  Iterate through the map of spaces and render each character,
+   *    render a newline whenever y has changed
+   */
   for(auto i = this->spaces.begin(); i != this->spaces.end(); i++){
     y = i->second->y();
 
@@ -71,6 +113,16 @@ std::string Floor::render_floor()
   return render_string;
 }
 
+
+/*************************************************************************
+ * Function:  ~Floor
+ * Description: destructor
+ * Parameters: none
+ * Pre-conditions: none
+ * Post-conditions: the dynamic memory encapsulated within the floor,
+ *                  spaces and mob data, will be freed
+ * Returns: none
+ ************************************************************************/
 Floor::~Floor()
 {
   for(auto i = this->spaces.begin(); i != this->spaces.end(); i++){
@@ -81,11 +133,32 @@ Floor::~Floor()
   }
 }
 
+
+/*************************************************************************
+ * Function: add_char
+ * Description: adds a character to the space at coord
+ * Parameters: character - the character to add
+ *             coord - the location of the coord to add the character to
+ *
+ * Pre-conditions: 
+ * Post-conditions: the character may have been added to the space
+ * Returns: bool - true if the character was successfully added
+ ************************************************************************/
 bool Floor::add_char(Character *character, const Coord &coord)
 {
   return this->spaces[coord]->add_character(character);
 }
 
+
+/*************************************************************************
+ * Function: move_char
+ * Description: moves a character from one space to another
+ * Parameters: from - the coordinate to move from
+ *             to - the coordinate to move to
+ * Pre-conditions: none
+ * Post-conditions: the character may have been moved
+ * Returns: bool - true if the character was succesfully moved
+ ************************************************************************/
 bool Floor::move_char(const Coord &from, const Coord &to)
 {
   Character *character = NULL;

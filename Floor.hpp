@@ -1,3 +1,11 @@
+/*************************************************************************
+ * Program Filename: Floor.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for a Floor class.
+ * Input:   none
+ * Output:  none
+ ************************************************************************/
 #ifndef FLOOR_HPP
 #define FLOOR_HPP
 
@@ -27,12 +35,12 @@ class Floor{
     void load_floor(std::string path);
     std::string render_floor();
     Space * interpret_space(char space_char, Coord coord);
-
     bool add_char(Character *, const Coord &coord);
     bool move_char(const Coord &from, const Coord &to);
     void list_mob(Character *mob) { this->mob_list.insert(mob); } 
     void unlist_mob(Character *mob) { this->mob_list.erase(this->mob_list.find(mob)); }
     std::set<Character *> *get_mob_list() { return &(this->mob_list); }
+    std::map<Coord, Space *> *get_spaces() { return &(this->spaces); }
 };
 
 #endif

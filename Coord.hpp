@@ -1,3 +1,11 @@
+/*************************************************************************
+ * Program Filename: Coord.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for a Coord class
+ * Input:   None
+ * Output:  None
+ ************************************************************************/
 #ifndef COORD_HPP
 #define COORD_HPP
 

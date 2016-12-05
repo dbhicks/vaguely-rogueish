@@ -1,3 +1,13 @@
+/*************************************************************************
+ * Program Filename: Space.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for a Space class and its subclasses
+ *              OpenSpace, Door, SecretDoor, Wall, Stair, UpStair and Downstair
+ * Input:  none
+ * Output: none
+ ************************************************************************/
+
 #ifndef SPACE_HPP
 #define SPACE_HPP
 
@@ -6,6 +16,13 @@
 #include <string>
 #include "Item.hpp"
 #include "Coord.hpp"
+
+class Floor;
+class Character;
+
+          ////////////////////////////////////////////////////////
+         //               Global Constants                     // 
+        ////////////////////////////////////////////////////////
 
 const char OPEN_DOOR_C    = '/';
 const char CLOSED_DOOR_C  = '[';
@@ -18,8 +35,10 @@ const char HIDDEN_DOOR_C  = '%';
 
 enum direction {UP, RIGHT, DOWN, LEFT};
 
-class Floor;
-class Character;
+
+          ////////////////////////////////////////////////////////
+         //              Space                                 // 
+        ////////////////////////////////////////////////////////
 
 class Space{
   protected:
@@ -36,6 +55,7 @@ class Space{
     virtual ~Space() {}; 
     virtual bool passable() = 0;
     virtual bool is_locked() { return false; };
+    void link(Space *space, direction dir) { this->linked_spaces[dir] = space; }
 
     /* Character methods */
     Character *get_character() { return this->present_character; }
@@ -58,6 +78,10 @@ class Space{
     int y() { return this->coord.y(); }
 };
 
+          ////////////////////////////////////////////////////////
+         //                OpenSpace                           // 
+        ////////////////////////////////////////////////////////
+
 class OpenSpace : public Space {
   public:
     OpenSpace(const Coord &coord) : Space(coord) { this->render_char = EMPTY_SPACE_C; }    
@@ -68,6 +92,10 @@ class OpenSpace : public Space {
     virtual Item * remove_item(std::string itemID);
 };
 
+          ////////////////////////////////////////////////////////
+         //                Wall                                // 
+        ////////////////////////////////////////////////////////
+
 class Wall : public Space {
   protected:
   public:
@@ -75,6 +103,10 @@ class Wall : public Space {
     Wall(int x, int y) : Space(x, y) { render_char = WALL_C; }
     virtual bool passable() { return false; }
 };
+
+          ////////////////////////////////////////////////////////
+         //                   Door                             // 
+        ////////////////////////////////////////////////////////
 
 class Door : public Space {
   protected:
@@ -97,6 +129,10 @@ class Door : public Space {
     bool close();
 };
 
+          ////////////////////////////////////////////////////////
+         //             Secret Door                            // 
+        ////////////////////////////////////////////////////////
+
 class SecretDoor : public Space {
   protected:
     bool is_open;
@@ -113,7 +149,9 @@ class SecretDoor : public Space {
     bool open(); 
 };
 
-
+          ////////////////////////////////////////////////////////
+         //              Stair                                 // 
+        ////////////////////////////////////////////////////////
 
 class Stair : public Space {
   protected:
@@ -134,6 +172,10 @@ class Stair : public Space {
     virtual bool passable() { return true; }
 };
 
+          ////////////////////////////////////////////////////////
+         //             UpStair                                // 
+        ////////////////////////////////////////////////////////
+
 class UpStair : public Stair {
   public:   
     UpStair(const Coord &coord) : 
@@ -142,6 +184,10 @@ class UpStair : public Stair {
     UpStair(int x, int y, Space *linked_stair = NULL, Floor *linked_floor = NULL) : 
       Stair(x, y, UP_STAIR_C) {}
 };
+
+          ////////////////////////////////////////////////////////
+         //            DownStair                               // 
+        ////////////////////////////////////////////////////////
 
 class DownStair : public Stair {
   public:

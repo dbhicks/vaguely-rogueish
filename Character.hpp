@@ -1,3 +1,13 @@
+/*************************************************************************
+ * Program Filename: Character.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for a character class and its
+ *              subclasses, player and mob.
+ * Input: none
+ * Output: none
+ ************************************************************************/
+
 #ifndef CHARACTER_HPP
 #define CHARACTER_HPP
 #include <map>
@@ -7,6 +17,10 @@
 
 class Item;
 class Die;
+
+      ////////////////////////////////////////////////////////////
+     //             Enumerated Data and Structs                //
+    ////////////////////////////////////////////////////////////
 
 enum ability { STR, DEX, CON, INT, WIS, CHA };
 
@@ -30,8 +44,16 @@ struct attack_data {
   int damage_roll;
 };
 
+      ////////////////////////////////////////////////////////////
+     //             Global Constants                           //
+    ////////////////////////////////////////////////////////////
+
 const char PC_RENDER_C = '@';
 const Coord STARTING_COORD(4,4);
+
+      ////////////////////////////////////////////////////////////
+     //             Character Class                            //
+    ////////////////////////////////////////////////////////////
 
 class Character {
   protected:
@@ -55,7 +77,6 @@ class Character {
     int item_count(Item *item) { return (this->inventory.find(item)->second); }
     void add_item(Item *);
     bool remove_item(Item *);
-
     void set_name(std::string name) { this->name = name; }
     std::string get_name() { return this-> name; }
     int get_hp() { return this->hp; }
@@ -63,12 +84,15 @@ class Character {
     void rest() { this->hp = this->max_hp; }
     int get_max_hp() { return this->max_hp; };
     bool is_dead() { return this->hp <= 0; }
-
     virtual attack_data attack() = 0;
     virtual bool defend(attack_data) = 0;
-
     std::map<Item *, int> *get_inventory() { return &(this->inventory); }
 };
+
+
+      ////////////////////////////////////////////////////////////
+     //             Player Class                               //
+    ////////////////////////////////////////////////////////////
 
 class Player : public Character {
   private:
@@ -80,11 +104,9 @@ class Player : public Character {
 
   public:   
     Player(std::string name = "");
-
     int get_ability_mod(ability ab) { return (this->ability_score[ab] - 10) / 2;  }
     int get_ability(ability ab) { return this->ability_score[ab]; }
     void inc_ability(ability ab);
-
     double carry_weight();
     double max_carry();
     bool encumbered();
@@ -92,14 +114,17 @@ class Player : public Character {
     Item *get_weapon() { return this->equipped_weapon; }
     Item *get_armor() { return this->equipped_armor; }
     bool add_experience(int exp);
-
     int get_experience() { return this->experience; } 
     int get_level() { return this->level; }
-    int get_b_atk() { return this->b_atk; }
-    
+    int get_b_atk() { return this->b_atk; }    
     virtual attack_data attack();
     virtual bool defend(attack_data);
 };
+
+
+      ////////////////////////////////////////////////////////////
+     //             Player Class                               //
+    ////////////////////////////////////////////////////////////
 
 class Mob : public Character {
   protected:

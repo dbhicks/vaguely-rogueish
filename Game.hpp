@@ -1,3 +1,14 @@
+/*************************************************************************
+ * Program File: Game.hpp
+ * Author: David Bacher-Hicks
+ * Date: 3 December 2016
+ * Description: A class declaration file for a game object that handles
+ *              operating a roguelike game.
+ * Input: Reads game data from gamedata files
+ *        standard in
+ * Output: standard out
+ ************************************************************************/
+
 #ifndef GAME_HPP
 #define GAME_HPP
   
@@ -40,16 +51,18 @@ class Game{
     int days_passed;
     
   public:
+    /* constructors destructors */
     Game(std::string hero_name);
     ~Game();
 
+    /* methods for loading game objects */
     void load_floors();
+    void link_spaces();
     void load_items();
     void load_mobs();
-    void read_input(int input);
 
+    /* player-related methods */
     void move_player(const direction &dir);
-
     void manage_player_inventory();
     Item* get_player_inventory_selection(const char *prompt);
     void print_player_inventory();
@@ -59,19 +72,20 @@ class Game{
     void player_equip_item();
     void player_attack_mob(Character *mob);
     void player_rest();
-    void inc_day() { this->days_passed++; }
     void print_player_character_sheet();
 
+    /* monster-related methods */
     void move_mobs();
     bool mob_make_moves(Character *mob, const std::vector<direction> &moves);
     bool mob_attack_player(Character *mob);
-    
+   
+    /* misc. game methods */
+    void read_input(int input);
+    void inc_day() { this->days_passed++; }
     std::string render();
     std::string print_status_bar();
-
     Coord coord_from_direction(const Coord &coord, const direction &dir);
     bool is_in_progress() { return this->in_progress; }
-
 };
 
 #endif
