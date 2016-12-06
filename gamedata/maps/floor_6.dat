@@ -1,2 +1,26 @@
 floor006
 stair   64    18    floor004    8   2
+mob     3     2     orc01
+mob     11    2     orc01
+mob     19    2     orc01
+mob     3     6     orc01
+mob     11    6     orc01
+mob     19    6     orc01
+mob     25    2     orc01
+mob     25    6     orc01
+mob     33    2     orc01
+mob     33    6     orc01
+mob     42    2     orc01
+mob     42    6     orc01
+mob     50    2     orc01
+mob     50    6     orc01
+mob     56    2     orc01
+mob     56    6     orc01
+mob     64    2     orc01
+mob     64    6     orc01
+mob     4     15    orc01
+mob     17    18    orc01
+mob     25    14    orc01
+mob     40    18    orc01
+mob     52    16    orc01
+item    11    1     key_03

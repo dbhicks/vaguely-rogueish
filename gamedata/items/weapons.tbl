@@ -1,5 +1,5 @@
 "l_sword"          "longsword"     "a simple steel longsword"   4   15    1   8   0   0
 "falchion"         "falchion"      "a large, curved blade. It looks deadly... but also really heavy."   16    75    2   4   0   1
-"goblin_g_sword"   "great sword"   "a huge, imposing weapon. How did the goblin even use it?"   15    50    2   6   0   1
+"goblin_g_sword"   "great sword"   "a huge, imposing weapon. How did the goblin even use it?"   15    50    2   8   4   1
 "g_axe"            "great axe"     "a big, heavy axe. A favorite of barbarians."  20    20    1   12    0   
 "morningstar"      "morningstar"   "a simple weapon, combining the aspects of a club with the piercing force of spikes." 8    8   1   8   0   0

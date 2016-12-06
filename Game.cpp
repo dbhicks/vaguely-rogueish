@@ -63,6 +63,10 @@ Game::Game(std::string hero_name)
   this->player.equip_item(this->items[STARTING_AMR]);
   this->current_floor->add_char(&player, STARTING_COORD);
 
+  this->quest_target = new Mob( this->mobs[QUEST_TARGET_ID], QUEST_TARGET_COORD );
+  this->floors[QUEST_TARGET_FLOOR]->add_char(quest_target, QUEST_TARGET_COORD );
+  this->floors[QUEST_TARGET_FLOOR]->list_mob(quest_target);
+
   this->in_progress = true;
   this->days_passed = 0;
 
@@ -233,7 +237,9 @@ void Game::player_rest()
     this->player.rest();
     if (this->days_passed > MAX_DAYS) {
       ss << "You've taken too long to clear the dungeon.\n";
-    }    
+      ss << "GAME OVER\n";
+      this->in_progress = false;
+    }
   } else {
     ss << "You cannot rest while there are monsters nearby.\n";
   }
@@ -731,6 +737,11 @@ void Game::player_attack_mob(Character *mob)
     this->messages.push_back(attack_string.str());
 
     player.add_experience(dynamic_cast<Mob*>(mob)->get_experience());
+
+    if ( mob == this->quest_target ) {
+      this->messages.push_back("Congratulations!\n YOU WIN!\n");
+      this->in_progress = false;
+    }
 
     if (space->delete_character()){
       this->current_floor->unlist_mob(mob);

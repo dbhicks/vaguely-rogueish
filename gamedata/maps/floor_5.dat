@@ -1,5 +1,7 @@
 floor005
 stair   6   3   floor004    59    17
+stair   31  7   floor007    46    7
+door    23  7   key_03
 mob     2   7   skel02
 mob     2   14  skel02
 mob     6   19  skel02

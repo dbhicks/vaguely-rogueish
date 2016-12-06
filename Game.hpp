@@ -33,8 +33,13 @@ const std::string STARTING_MAP = "floor001";
 const std::string STARTING_WPN = "l_sword";
 const std::string STARTING_AMR = "starter_scale_mail";
 
+/* quest target information */
+const std::string QUEST_TARGET_ID = "mino01";
+const std::string QUEST_TARGET_FLOOR = "floor007";
+const Coord QUEST_TARGET_COORD = Coord(4,7);
+
 /* gameplay constants */
-const int MAX_DAYS = 20;
+const int MAX_DAYS = 5;
 
 class Game{
   private:
@@ -44,6 +49,7 @@ class Game{
     std::map<std::string, mob_data*> mobs;  /* map of mobID to data */
 
     Player player;                          /* the player character */
+    Mob *quest_target;                      /* */
     bool in_progress;                       /* whether the game is in progress */
     Floor *current_floor;                   /* pointer to the current floor */
     std::ofstream logfile;                  /* logfile */

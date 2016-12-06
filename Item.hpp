@@ -40,7 +40,7 @@ class Item {
     std::string name()  { return this->item_name; }
     double weight()     { return this->item_weight; }
     double value()      { return this->item_value; }
-    virtual void ignore_me() {} 
+//    virtual void ignore_me() {} 
 };
 
 
